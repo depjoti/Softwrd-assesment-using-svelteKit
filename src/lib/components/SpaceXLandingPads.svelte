@@ -1,13 +1,14 @@
 <script>
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
   import { Button, ButtonGroup, Card, Modal } from 'flowbite-svelte';
-  import { ListOutline, GridOutline, LinkOutline } from 'flowbite-svelte-icons';
-  
+  import { ListOutline, GridOutline, LinkOutline, FilterOutline, ChevronDownOutline } from 'flowbite-svelte-icons';
+  import { selectedStatus } from '../stores/filterStore';
 
   export let landingPads = [];
   let viewMode = 'list';
   let showModal = false;
   let selectedPad = null;
+  let showFilterDropdown = false;
 
   function getSuccessRate(attempted_landings, successful_landings) {
     if (!attempted_landings) return 0;
@@ -31,12 +32,15 @@
     selectedPad = pad;
     showModal = true;
   }
+
+  function handleStatusSelect(status) {
+    selectedStatus.set(status);
+    showFilterDropdown = false;
+  }
 </script>
 
-<!-- Modal Component -->
 <Modal bind:open={showModal} size="md" title={`Details - ${selectedPad?.full_name}`} autoclose>
   {#if selectedPad}
-   
     <p class="text-gray-600 text-sm leading-relaxed">
       {selectedPad.details}
     </p>
@@ -63,10 +67,72 @@
         </Button>
       </ButtonGroup>
     </div>
-    <div>
-      <Button color="light">
+    <div class="relative inline-block">
+      <Button 
+        color="light" 
+        class="flex items-center gap-2"
+        on:click={() => showFilterDropdown = !showFilterDropdown}
+      >
+        <FilterOutline class="w-4 h-4" />
         Filter By Status
+        <ChevronDownOutline class="w-3 h-3 ml-2" />
       </Button>
+
+      {#if showFilterDropdown}
+        <div class="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+          <div class="p-3 space-y-1">
+            <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+              <input 
+                type="radio" 
+                class="w-4 h-4 text-blue-600"
+                name="status-filter"
+                checked={$selectedStatus === 'all'}
+                on:change={() => handleStatusSelect('all')}
+              />
+              <span class="text-gray-900">All</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+              <input 
+                type="radio" 
+                class="w-4 h-4 text-blue-600"
+                name="status-filter"
+                checked={$selectedStatus === 'active'}
+                on:change={() => handleStatusSelect('active')}
+              />
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <span class="text-gray-900">Active</span>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+              <input 
+                type="radio" 
+                class="w-4 h-4 text-blue-600"
+                name="status-filter"
+                checked={$selectedStatus === 'retired'}
+                on:change={() => handleStatusSelect('retired')}
+              />
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                <span class="text-gray-900">Retired</span>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-md">
+              <input 
+                type="radio" 
+                class="w-4 h-4 text-blue-600"
+                name="status-filter"
+                checked={$selectedStatus === 'under construction'}
+                on:change={() => handleStatusSelect('under construction')}
+              />
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span class="text-gray-900">Under Construction</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      {/if}
     </div>
   </div>
 
@@ -166,3 +232,18 @@
     </div>
   {/if}
 </div>
+
+<style>
+  input[type="radio"] {
+    accent-color: #3b82f6;
+  }
+</style>
+
+<svelte:window on:click={(e) => {
+  const filterButton = e.target.closest('button');
+  const filterDropdown = e.target.closest('.relative');
+  
+  if (!filterButton && !filterDropdown) {
+    showFilterDropdown = false;
+  }
+}} />
