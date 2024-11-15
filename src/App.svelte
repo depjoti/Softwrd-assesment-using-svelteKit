@@ -3,6 +3,7 @@
   import 'ol/ol.css';  
   import SpaceXLandingPads from './lib/components/SpaceXLandingPads.svelte';
   import LandingPadsMap from './lib/components/LandingPadsMap.svelte';
+  import LandingPadsChart from './lib/components/LandingPadsChart.svelte';
 
   let landingPads = [];
 
@@ -21,11 +22,14 @@
     <div class="bg-white rounded-lg shadow-sm">
       <SpaceXLandingPads {landingPads} />
     </div>
-    <div class="bg-white rounded-lg shadow-sm">
-      <h2 class="p-4 text-lg font-medium border-b">Map View</h2>
-      <div class="p-4">
-        <LandingPadsMap {landingPads} />
+    <div class="flex flex-col gap-6">
+      <div class="bg-white rounded-lg shadow-sm">
+        <h2 class="p-4 text-lg font-medium border-b">Map View</h2>
+        <div class="p-4">
+          <LandingPadsMap {landingPads} />
+        </div>
       </div>
+      <LandingPadsChart {landingPads} />
     </div>
   </div>
 </main>
