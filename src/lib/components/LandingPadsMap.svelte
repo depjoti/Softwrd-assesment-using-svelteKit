@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import 'ol/ol.css';
   import Map from 'ol/Map';
   import View from 'ol/View';
   import TileLayer from 'ol/layer/Tile';
@@ -14,15 +15,51 @@
   export let landingPads = [];
   let mapElement;
   let map;
+  let vectorSource;
+  let vectorLayer;
 
-  $: if (mapElement && landingPads.length > 0) {
-    initMap();
+  onMount(() => {
+    initializeMap();
+    return () => {
+      if (map) {
+        map.setTarget(undefined);
+      }
+    };
+  });
+
+  function initializeMap() {
+    // Create vector source and layer
+    vectorSource = new VectorSource();
+    vectorLayer = new VectorLayer({
+      source: vectorSource
+    });
+
+    // Initialize map
+    map = new Map({
+      target: mapElement,
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        }),
+        vectorLayer
+      ],
+      view: new View({
+        center: fromLonLat([-95, 38]),
+        zoom: 3
+      })
+    });
+
+    // Initial update of features
+    updateMapFeatures();
   }
 
-  function initMap() {
-    // Create vector source and features
-    const vectorSource = new VectorSource();
-    
+  function updateMapFeatures() {
+    if (!vectorSource) return;
+
+    // Clear existing features
+    vectorSource.clear();
+
+    // Add new features
     landingPads.forEach(pad => {
       if (pad.location.longitude && pad.location.latitude) {
         const feature = new Feature({
@@ -30,7 +67,7 @@
           properties: pad
         });
 
-        // Style based on status
+        // Set style based on status
         const color = pad.status === 'active' ? '#22c55e' : 
                      pad.status === 'retired' ? '#ef4444' : '#3b82f6';
 
@@ -48,50 +85,17 @@
         vectorSource.addFeature(feature);
       }
     });
-
-    // Create map if it doesn't exist
-    if (!map) {
-      map = new Map({
-        target: mapElement,
-        layers: [
-          new TileLayer({
-            source: new OSM()
-          }),
-          new VectorLayer({
-            source: vectorSource
-          })
-        ],
-        view: new View({
-          center: fromLonLat([-95, 38]),
-          zoom: 4
-        })
-      });
-    }
   }
 
-  onMount(() => {
-    if (landingPads.length > 0) {
-      initMap();
-    }
-
-    return () => {
-      if (map) {
-        map.setTarget(undefined);
-      }
-    };
-  });
+  // Watch for changes in landingPads and update features
+  $: if (map && vectorSource && landingPads) {
+    updateMapFeatures();
+  }
 </script>
 
-<div bind:this={mapElement} class="map-container"></div>
+<div bind:this={mapElement} class="h-[400px] w-full rounded-lg overflow-hidden"></div>
 
 <style>
-  .map-container {
-    width: 100%;
-    height: 400px;
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-
   :global(.ol-control) {
     background-color: transparent;
   }
@@ -102,10 +106,10 @@
   }
 
   :global(.ol-zoom button) {
-    background-color: white;
-    color: #4b5563;
-    border: 1px solid #e5e7eb;
-    margin: 1px;
-    border-radius: 0.25rem;
+    background-color: white !important;
+    color: #4b5563 !important;
+    border: 1px solid #e5e7eb !important;
+    margin: 1px !important;
+    border-radius: 0.25rem !important;
   }
 </style>
