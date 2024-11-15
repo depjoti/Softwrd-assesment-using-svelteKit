@@ -1,10 +1,13 @@
 <script>
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-  import { Button, ButtonGroup, Card } from 'flowbite-svelte';
+  import { Button, ButtonGroup, Card, Modal } from 'flowbite-svelte';
   import { ListOutline, GridOutline, LinkOutline } from 'flowbite-svelte-icons';
+  
 
   export let landingPads = [];
   let viewMode = 'list';
+  let showModal = false;
+  let selectedPad = null;
 
   function getSuccessRate(attempted_landings, successful_landings) {
     if (!attempted_landings) return 0;
@@ -23,7 +26,22 @@
         return 'text-gray-500 bg-gray-100 px-2 py-1 rounded-md text-sm';
     }
   }
+
+  function openDetails(pad) {
+    selectedPad = pad;
+    showModal = true;
+  }
 </script>
+
+<!-- Modal Component -->
+<Modal bind:open={showModal} size="md" title={`Details - ${selectedPad?.full_name}`} autoclose>
+  {#if selectedPad}
+   
+    <p class="text-gray-600 text-sm leading-relaxed">
+      {selectedPad.details}
+    </p>
+  {/if}
+</Modal>
 
 <div class="p-4">
   <div class="flex justify-between items-center mb-4">
@@ -70,7 +88,9 @@
             <TableBodyCell>{pad.location.name}</TableBodyCell>
             <TableBodyCell>{pad.location.region}</TableBodyCell>
             <TableBodyCell>
-              <Button size="xs" color="light" class="px-3 py-1">View Details</Button>
+              <Button size="xs" color="light" class="px-3 py-1" on:click={() => openDetails(pad)}>
+                View Details
+              </Button>
             </TableBodyCell>
             <TableBodyCell>
               {#if pad.attempted_landings}
@@ -134,7 +154,9 @@
           </div>
 
           <div class="mt-4 flex justify-between items-center">
-            <Button size="xs" color="light" class="px-3 py-1">View Details</Button>
+            <Button size="xs" color="light" class="px-3 py-1" on:click={() => openDetails(pad)}>
+              View Details
+            </Button>
             <a href={pad.wikipedia} target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600">
               <LinkOutline size="sm" />
             </a>
