@@ -28,14 +28,25 @@
     }
   }
 
+  function formatStatus(status) {
+    return status.toUpperCase();
+  }
+
   function openDetails(pad) {
     selectedPad = pad;
     showModal = true;
   }
 
+  // function handleStatusSelect(status) {
+  //   selectedStatus.set(status);
+  //   showFilterDropdown = false;
+  // }
+
   function handleStatusSelect(status) {
-    selectedStatus.set(status);
     showFilterDropdown = false;
+    setTimeout(() => {
+      selectedStatus.set(status);
+    }, 100);
   }
 </script>
 
@@ -180,7 +191,7 @@
             </TableBodyCell>
             <TableBodyCell>
               <span class={getStatusColor(pad.status)}>
-                {pad.status}
+                {formatStatus(pad.status)}
               </span>
             </TableBodyCell>
           </TableBodyRow>
@@ -198,7 +209,7 @@
               <p class="text-gray-600 text-sm">Region: {pad.location.region}</p>
             </div>
             <span class={getStatusColor(pad.status)}>
-              {pad.status}
+              {formatStatus(pad.status)}
             </span>
           </div>
           
