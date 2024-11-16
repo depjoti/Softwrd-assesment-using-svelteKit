@@ -1,47 +1,113 @@
-# Svelte + Vite
+# SpaceX Landing Pads Dashboard
 
-This template should help get you started developing with Svelte in Vite.
+A SvelteKit application that displays information about SpaceX landing pads with interactive features and visualizations.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+- View landing pad data in both list and grid layouts
+- Interactive map showing landing pad locations
+- Success rate visualization with donut chart
+- Filter landing pads by status (Active, Retired, Under Construction)
+- Detailed view for each landing pad
+- Responsive design for all screen sizes
 
-## Need an official Svelte framework?
+## Technologies Used
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- SvelteKit 5
+- TailwindCSS
+- Flowbite Svelte Components
+- OpenLayers for Maps
+- Chart.js for Data Visualization
+- SpaceX API
 
-## Technical considerations
+## Prerequisites
 
-**Why use this over SvelteKit?**
+- Node.js (version 16 or higher)
+- npm (comes with Node.js)
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Installation
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd assesmentsoftwrd
 ```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Building for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+The build files will be located in the `build` directory.
+
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/
+│   │   ├── SpaceXLandingPads.svelte
+│   │   ├── LandingPadsMap.svelte
+│   │   └── LandingPadsChart.svelte
+│   └── stores/
+│       └── filterStore.js
+├── App.svelte
+│ 
+└── app.css
+```
+
+## API Integration
+
+The application uses the SpaceX API to fetch landing pad data:
+- Endpoint: `https://api.spacexdata.com/v3/landpads`
+- No authentication required
+- Data includes location coordinates, success rates, and status information
+
+## Features in Detail
+
+### List/Grid View
+- Toggle between table and card layouts
+- Comprehensive information display
+- Success rate progress bars
+- Status indicators with color coding
+
+### Interactive Map
+- Shows all landing pad locations
+- Color-coded markers based on status
+- Zoom and pan controls
+- Responsive design
+
+### Success Rate Chart
+- Donut chart visualization
+- Shows distribution of landing pad statuses
+- Interactive legend
+- Center display showing total count
+
+### Filtering
+- Filter by operational status
+- Real-time updates across all views
+- Clear visual indicators for active filters
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/YourFeature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin feature/YourFeature`
+5. Submit a pull request
+
