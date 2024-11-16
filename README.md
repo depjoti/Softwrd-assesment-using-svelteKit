@@ -29,7 +29,7 @@ A SvelteKit application that displays information about SpaceX landing pads with
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/depjoti/Softwrd-assesment-using-svelteKit.git
 cd assesmentsoftwrd
 ```
 
