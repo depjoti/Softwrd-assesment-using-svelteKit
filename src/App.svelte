@@ -71,7 +71,10 @@
               <LandingPadsMap landingPads={filteredPads} />
             </div>
           </div>
-          <LandingPadsChart landingPads={filteredPads} />
+          <div>
+            <LandingPadsChart landingPads={filteredPads} />
+          </div>
+          
         </div>
       </div>
     {/if}
