@@ -1,7 +1,7 @@
 <script>
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
   import { Button, ButtonGroup, Card, Modal } from 'flowbite-svelte';
-  import { ListOutline, GridOutline, LinkOutline, FilterOutline, ChevronDownOutline } from 'flowbite-svelte-icons';
+  import { ListOutline, GridOutline, LinkOutline, ChevronDownOutline,AdjustmentsVerticalSolid } from 'flowbite-svelte-icons';
   import { selectedStatus } from '../stores/filterStore';
 
   export let landingPads = [];
@@ -9,6 +9,16 @@
   let showModal = false;
   let selectedPad = null;
   let showFilterDropdown = false;
+
+  const tableHeaders = [
+    'Full Name',
+    'Location Name',
+    'Region',
+    'Details',
+    'Success Rate',
+    'Wikipedia Link',
+    'Status'
+  ];
 
   function getSuccessRate(attempted_landings, successful_landings) {
     if (!attempted_landings) return 0;
@@ -61,22 +71,20 @@
 <div class="p-4">
   <div class="flex justify-between items-center mb-4">
     <div class="flex space-x-2">
-      <ButtonGroup>
-        <Button
+      <div class="bg-gray-100 rounded-lg flex p-1"> 
+        <button
+          class={`px-4 py-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500'}`}
           on:click={() => viewMode = 'list'}
-          color={viewMode === 'list' ? 'primary' : 'light'}
-          class="px-2 py-1"
         >
           <ListOutline size="sm" />
-        </Button>
-        <Button
+        </button>
+        <button
+          class={`px-4 py-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500'}`}
           on:click={() => viewMode = 'grid'}
-          color={viewMode === 'grid' ? 'primary' : 'light'}
-          class="px-2 py-1"
         >
           <GridOutline size="sm" />
-        </Button>
-      </ButtonGroup>
+        </button>
+      </div>
     </div>
     <div class="relative inline-block">
       <Button 
@@ -84,7 +92,7 @@
         class="flex items-center gap-2"
         on:click={() => showFilterDropdown = !showFilterDropdown}
       >
-        <FilterOutline class="w-4 h-4" />
+        <AdjustmentsVerticalSolid class="w-4 h-4" />
         Filter By Status
         <ChevronDownOutline class="w-3 h-3 ml-2" />
       </Button>
@@ -148,15 +156,13 @@
   </div>
 
   {#if viewMode === 'list'}
-    <Table noborder={true} hoverable={true} class="divide-y divide-gray-100">
-      <TableHead>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Full Name</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Location Name</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Region</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Details</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Success Rate</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Wikipedia Link</TableHeadCell>
-        <TableHeadCell class="text-xs uppercase text-gray-500">Status</TableHeadCell>
+    <Table hoverable={true} class="divide-y divide-gray-100">
+      <TableHead class="bg-gray-50  border-b">
+        {#each tableHeaders as header}
+      <TableHeadCell class="text-xs uppercase text-gray-500 font-medium py-4">
+        {header}
+      </TableHeadCell>
+    {/each}
       </TableHead>
       <TableBody class="divide-y divide-gray-100">
         {#each landingPads as pad}
@@ -245,6 +251,21 @@
 </div>
 
 <style>
+   :global(th) {
+    background-color: #F9FAFB !important;
+    /* border-top: 1px solid #E5E7EB !important; */
+    /* border-bottom: 1px solid #E5E7EB !important; */
+  }
+
+  :global(button:focus) {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove default button styling */
+  :global(.flowbite-btn) {
+    box-shadow: none !important;
+  }
   input[type="radio"] {
     accent-color: #3b82f6;
   }
